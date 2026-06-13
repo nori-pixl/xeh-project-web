@@ -1,0 +1,764 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>xeh - Q&A</title>
+    <style>
+        :root {
+            --xeh-purple: #7514d3;
+            --xeh-pink: #f25aa2;
+            --xeh-orange: #f98616;
+            --go-dark: #1a1a1a;
+            --go-gray: #f8f9fa;
+            --go-border: #e0e0e0;
+            --text-color: #333333;
+            --code-bg: #1e1e1e;
+        }
+
+        * { box-sizing: border-box; }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+            line-height: 1.6;
+            color: var(--text-color);
+            margin: 0;
+            padding: 0;
+            background-color: #ffffff;
+        }
+
+        header {
+            background-color: #ffffff;
+            border-bottom: 1px solid var(--go-border);
+            padding: 1rem 2rem;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-container {
+            max-width: 1100px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.6rem;
+            font-weight: 800;
+            background: linear-gradient(90deg, var(--xeh-purple), var(--xeh-pink), var(--xeh-orange));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-decoration: none;
+        }
+
+        .nav-links a {
+            color: var(--text-color);
+            text-decoration: none;
+            margin-left: 1.5rem;
+            font-size: 0.95rem;
+            font-weight: 500;
+        }
+
+        .nav-links a:hover { color: var(--xeh-purple); }
+
+        /* Hero */
+        .hero {
+            background: linear-gradient(135deg, var(--xeh-purple) 0%, #ad29aa 50%, var(--xeh-orange) 100%);
+            color: white;
+            padding: 3.5rem 2rem;
+            text-align: center;
+        }
+
+        .hero h1 {
+            font-size: 2.4rem;
+            margin: 0 0 0.75rem 0;
+            font-weight: 800;
+        }
+
+        .hero p {
+            font-size: 1.1rem;
+            margin: 0;
+            opacity: 0.9;
+        }
+
+        /* Layout */
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 3rem 2rem;
+        }
+
+        /* Category filter */
+        .category-bar {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .cat-btn {
+            border: 1.5px solid var(--go-border);
+            background: white;
+            color: var(--text-color);
+            padding: 0.4rem 1rem;
+            border-radius: 20px;
+            font-size: 0.875rem;
+            cursor: pointer;
+            transition: all 0.15s;
+            font-family: inherit;
+        }
+
+        .cat-btn:hover {
+            border-color: var(--xeh-purple);
+            color: var(--xeh-purple);
+        }
+
+        .cat-btn.active {
+            background: var(--xeh-purple);
+            border-color: var(--xeh-purple);
+            color: white;
+        }
+
+        /* FAQ accordion */
+        .faq-list { display: flex; flex-direction: column; gap: 0.75rem; }
+
+        .faq-item {
+            border: 1px solid var(--go-border);
+            border-radius: 6px;
+            overflow: hidden;
+            transition: box-shadow 0.2s;
+        }
+
+        .faq-item:hover { box-shadow: 0 2px 8px rgba(117,20,211,0.08); }
+
+        .faq-item[data-open="true"] {
+            border-color: var(--xeh-purple);
+            box-shadow: 0 2px 12px rgba(117,20,211,0.12);
+        }
+
+        .faq-q {
+            width: 100%;
+            background: white;
+            border: none;
+            padding: 1.1rem 1.25rem;
+            text-align: left;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 500;
+            color: var(--go-dark);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 1rem;
+            font-family: inherit;
+            transition: background 0.15s;
+        }
+
+        .faq-q:hover { background: var(--go-gray); }
+
+        .faq-item[data-open="true"] .faq-q {
+            background: linear-gradient(135deg, #f5eeff 0%, #fff5fb 100%);
+            color: var(--xeh-purple);
+        }
+
+        .faq-chevron {
+            width: 20px;
+            height: 20px;
+            flex-shrink: 0;
+            transition: transform 0.25s;
+            color: var(--xeh-purple);
+        }
+
+        .faq-item[data-open="true"] .faq-chevron {
+            transform: rotate(180deg);
+        }
+
+        .faq-tag {
+            font-size: 0.72rem;
+            font-weight: 600;
+            padding: 0.2rem 0.55rem;
+            border-radius: 12px;
+            flex-shrink: 0;
+            text-transform: uppercase;
+            letter-spacing: 0.03em;
+        }
+
+        .tag-基本     { background: #ede8ff; color: #5a1aaa; }
+        .tag-設定     { background: #fff0e6; color: #b85a00; }
+        .tag-アーキテクチャ { background: #fde8f3; color: #9e2066; }
+        .tag-拡張     { background: #e8f5e9; color: #2a6e35; }
+        .tag-トラブル  { background: #fff3cd; color: #856404; }
+
+        .faq-a {
+            display: none;
+            padding: 0 1.25rem 1.25rem;
+            font-size: 0.95rem;
+            color: #444;
+            border-top: 1px solid var(--go-border);
+            background: white;
+        }
+
+        .faq-item[data-open="true"] .faq-a { display: block; }
+
+        .faq-a p { margin: 0.75rem 0 0; }
+        .faq-a p:first-child { margin-top: 0.85rem; }
+
+        .faq-a code {
+            font-family: "SFMono-Regular", Consolas, Menlo, monospace;
+            background: var(--go-gray);
+            padding: 0.15rem 0.4rem;
+            border-radius: 3px;
+            font-size: 0.875rem;
+        }
+
+        .faq-a pre {
+            background: var(--code-bg);
+            color: #f8f8f2;
+            padding: 1rem 1.25rem;
+            border-radius: 4px;
+            overflow-x: auto;
+            font-size: 0.875rem;
+            border-left: 4px solid var(--xeh-orange);
+            margin: 0.75rem 0 0;
+            font-family: "SFMono-Regular", Consolas, Menlo, monospace;
+        }
+
+        /* AI Ask */
+        .ai-section {
+            margin-top: 3rem;
+            border: 1.5px solid var(--go-border);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .ai-header {
+            background: linear-gradient(135deg, var(--xeh-purple) 0%, #ad29aa 100%);
+            color: white;
+            padding: 1.1rem 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .ai-header h2 {
+            margin: 0;
+            font-size: 1.1rem;
+            font-weight: 600;
+            border: none;
+            padding: 0;
+            color: white;
+        }
+
+        .ai-spark {
+            font-size: 1.3rem;
+        }
+
+        .ai-body { padding: 1.25rem 1.5rem; }
+
+        .ai-input-row {
+            display: flex;
+            gap: 0.75rem;
+        }
+
+        .ai-input {
+            flex: 1;
+            border: 1.5px solid var(--go-border);
+            border-radius: 6px;
+            padding: 0.7rem 1rem;
+            font-size: 0.95rem;
+            font-family: inherit;
+            transition: border-color 0.15s;
+            outline: none;
+        }
+
+        .ai-input:focus { border-color: var(--xeh-purple); }
+
+        .ai-submit {
+            background: linear-gradient(135deg, var(--xeh-purple), var(--xeh-pink));
+            color: white;
+            border: none;
+            border-radius: 6px;
+            padding: 0.7rem 1.4rem;
+            font-size: 0.95rem;
+            font-weight: 600;
+            cursor: pointer;
+            font-family: inherit;
+            white-space: nowrap;
+            transition: opacity 0.15s;
+        }
+
+        .ai-submit:hover { opacity: 0.88; }
+        .ai-submit:disabled { opacity: 0.5; cursor: not-allowed; }
+
+        .ai-answer {
+            margin-top: 1.25rem;
+            display: none;
+        }
+
+        .ai-answer.visible { display: block; }
+
+        .ai-answer-label {
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: var(--xeh-purple);
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            margin-bottom: 0.5rem;
+        }
+
+        .ai-answer-box {
+            background: var(--go-gray);
+            border: 1px solid var(--go-border);
+            border-radius: 6px;
+            padding: 1rem 1.25rem;
+            font-size: 0.95rem;
+            line-height: 1.7;
+            white-space: pre-wrap;
+            min-height: 60px;
+        }
+
+        .ai-loading {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: #888;
+            font-size: 0.9rem;
+        }
+
+        .dots span {
+            display: inline-block;
+            width: 6px; height: 6px;
+            background: var(--xeh-purple);
+            border-radius: 50%;
+            animation: dot-bounce 1.2s infinite;
+        }
+        .dots span:nth-child(2) { animation-delay: 0.2s; }
+        .dots span:nth-child(3) { animation-delay: 0.4s; }
+
+        @keyframes dot-bounce {
+            0%, 80%, 100% { transform: translateY(0); opacity: 0.4; }
+            40% { transform: translateY(-5px); opacity: 1; }
+        }
+
+        .no-results {
+            text-align: center;
+            color: #888;
+            padding: 2rem;
+            display: none;
+        }
+
+        /* Footer */
+        footer {
+            background-color: var(--go-dark);
+            color: #ffffff;
+            padding: 2.5rem 2rem;
+            text-align: center;
+            font-size: 0.9rem;
+        }
+
+        footer a { color: var(--xeh-pink); text-decoration: none; }
+        footer a:hover { text-decoration: underline; }
+    </style>
+</head>
+<body>
+
+<header>
+    <div class="header-container">
+        <a href="index.html" class="logo">xeh</a>
+        <nav class="nav-links">
+            <a href="index.html#download">ダウンロード</a>
+            <a href="index.html#quickstart">クイックスタート</a>
+            <a href="index.html#features">機能・特徴</a>
+            <a href="#">ドキュメント</a>
+            <a href="https://github.com/nori-pixl/xeh-project" target="_blank">GitHub</a>
+        </nav>
+    </div>
+</header>
+
+<div class="hero">
+    <h1>よくある質問 (Q&amp;A)</h1>
+    <p>xehの設計・使い方・トラブルシューティングに関する疑問にお答えします</p>
+</div>
+
+<div class="container">
+
+    <!-- カテゴリフィルター -->
+    <div class="category-bar">
+        <button class="cat-btn active" data-cat="all">すべて</button>
+        <button class="cat-btn" data-cat="基本">基本</button>
+        <button class="cat-btn" data-cat="設定">設定</button>
+        <button class="cat-btn" data-cat="アーキテクチャ">アーキテクチャ</button>
+        <button class="cat-btn" data-cat="拡張">拡張</button>
+        <button class="cat-btn" data-cat="トラブル">トラブルシューティング</button>
+    </div>
+
+    <div class="faq-list" id="faqList">
+
+        <!-- 基本 -->
+        <div class="faq-item" data-cat="基本">
+            <button class="faq-q">
+                <span>xeh とは何ですか？どんな問題を解決しますか？</span>
+                <span style="display:flex;align-items:center;gap:0.5rem">
+                    <span class="faq-tag tag-基本">基本</span>
+                    <svg class="faq-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+                </span>
+            </button>
+            <div class="faq-a">
+                <p>xeh は「XMLベースのマルチランタイム・オーケストレーションエンジン」です。Python・Go・Ruby・Rustなど複数の言語ランタイムを、1つの設定ファイル群（<code>set.json</code> と <code>app.xeh</code>）で束ねて並列実行できます。</p>
+                <p>解決する主な課題は「ポリグロット環境の複雑さ」です。通常、複数言語を連携させるにはメッセージキューやマイクロサービス基盤が必要ですが、xehでは親プロセス（Go）が共有メモリをJSONとして各子プロセスのstdinへ直接流し込むため、追加インフラなしで変数共有が実現します。</p>
+            </div>
+        </div>
+
+        <div class="faq-item" data-cat="基本">
+            <button class="faq-q">
+                <span>xeh を動かすために必要な環境は？</span>
+                <span style="display:flex;align-items:center;gap:0.5rem">
+                    <span class="faq-tag tag-基本">基本</span>
+                    <svg class="faq-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+                </span>
+            </button>
+            <div class="faq-a">
+                <p>xehエンジン本体のビルドには <strong>Go 1.18以降</strong> が必要です。それ以外に必要なのは、実際に使う各言語のランタイムだけです。</p>
+                <p>例えば <code>&lt;py-processor&gt;</code> タグを使うなら Python が、<code>&lt;rb-script&gt;</code> を使うなら Ruby がインストールされている必要があります。使わない言語のランタイムは不要です。</p>
+            </div>
+        </div>
+
+        <div class="faq-item" data-cat="基本">
+            <button class="faq-q">
+                <span><code>set.json</code> と <code>app.xeh</code> の役割の違いは？</span>
+                <span style="display:flex;align-items:center;gap:0.5rem">
+                    <span class="faq-tag tag-基本">基本</span>
+                    <svg class="faq-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+                </span>
+            </button>
+            <div class="faq-a">
+                <p><code>set.json</code> は「環境定義」です。どの言語タグがどのコマンドで実行されるかをマッピングします。インフラの設定書と考えてください。</p>
+                <p><code>app.xeh</code> は「アプリケーション定義」です。共有メモリの初期値（変数）と、各サブランタイムで動かす実際のコードロジックを記述します。</p>
+                <p>この分離により、同じ <code>app.xeh</code> を本番・開発・テスト環境で使い回しつつ、<code>set.json</code> だけ差し替えてコマンドパスを変えるといった運用が可能です。</p>
+            </div>
+        </div>
+
+        <!-- 設定 -->
+        <div class="faq-item" data-cat="設定">
+            <button class="faq-q">
+                <span>新しい言語ランタイム（例: Deno）を追加するには？</span>
+                <span style="display:flex;align-items:center;gap:0.5rem">
+                    <span class="faq-tag tag-設定">設定</span>
+                    <svg class="faq-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+                </span>
+            </button>
+            <div class="faq-a">
+                <p><code>set.json</code> の <code>"runtimes"</code> セクションにエントリを追加し、<code>"engines"</code> で対応するタグ名を定義するだけです：</p>
+                <pre>{
+  "runtimes": {
+    "deno": {
+      "command": "deno",
+      "args": ["run", "--allow-read", "{src}"]
+    }
+  },
+  "engines": {
+    "deno-worker": {
+      "type": "deno",
+      "src": "src/worker.ts"
+    }
+  }
+}</pre>
+                <p>これで <code>app.xeh</code> 内で <code>&lt;deno-worker&gt;...&lt;/deno-worker&gt;</code> タグが使えるようになります。</p>
+            </div>
+        </div>
+
+        <div class="faq-item" data-cat="設定">
+            <button class="faq-q">
+                <span><code>{src}</code> プレースホルダーはどう機能しますか？</span>
+                <span style="display:flex;align-items:center;gap:0.5rem">
+                    <span class="faq-tag tag-設定">設定</span>
+                    <svg class="faq-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+                </span>
+            </button>
+            <div class="faq-a">
+                <p>xehエンジンは起動時、<code>app.xeh</code> の該当タグの中身を <code>engines[tag].src</code> で指定したパスのファイルとして一時書き出します。その後 <code>args</code> の <code>{src}</code> をそのパスで置換してコマンドを組み立てます。</p>
+                <p>例えば <code>"args": ["-u", "{src}"]</code> は実際には <code>python -u src/process.py</code> というコマンドに展開されます。<code>args</code> 配列の任意の位置に複数回記述することもできます。</p>
+            </div>
+        </div>
+
+        <div class="faq-item" data-cat="設定">
+            <button class="faq-q">
+                <span>HTTPサーバー機能はどう設定しますか？</span>
+                <span style="display:flex;align-items:center;gap:0.5rem">
+                    <span class="faq-tag tag-設定">設定</span>
+                    <svg class="faq-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+                </span>
+            </button>
+            <div class="faq-a">
+                <p><code>app.xeh</code> に <code>&lt;server&gt;</code> タグを追加します。<code>id</code> で名前を、<code>port</code> でポート番号を指定し、内部にHTMLを直接記述できます：</p>
+                <pre>&lt;xeh&gt;
+  &lt;server id="web-ui" port="3000"&gt;
+    &lt;!DOCTYPE html&gt;
+    &lt;html&gt;&lt;body&gt;
+      &lt;h1&gt;xeh Web UI&lt;/h1&gt;
+    &lt;/body&gt;&lt;/html&gt;
+  &lt;/server&gt;
+&lt;/xeh&gt;</pre>
+                <p>複数の <code>&lt;server&gt;</code> タグを並べることで、異なるポートで複数のサーバーを同時に立ち上げることができます。<code>/submit</code> エンドポイントではフォームデータの受け取りと共有メモリの表示が自動で処理されます。</p>
+            </div>
+        </div>
+
+        <!-- アーキテクチャ -->
+        <div class="faq-item" data-cat="アーキテクチャ">
+            <button class="faq-q">
+                <span>共有メモリ（sharedStore）はどのように子プロセスへ渡されますか？</span>
+                <span style="display:flex;align-items:center;gap:0.5rem">
+                    <span class="faq-tag tag-アーキテクチャ">アーキテクチャ</span>
+                    <svg class="faq-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+                </span>
+            </button>
+            <div class="faq-a">
+                <p>xehエンジンは子プロセス起動後、<code>MemoryPacket</code> 構造体をJSONにシリアライズし、子プロセスのstdinへ1行で書き込みます：</p>
+                <pre>{"memory_name":"production_space","data":{"threshold":85,"status":"active"}}</pre>
+                <p>子プロセス側では起動直後にstdinの最初の1行を読み取るだけで共有変数にアクセスできます（Python例）：</p>
+                <pre>import sys, json
+packet = json.loads(sys.stdin.readline())
+threshold = packet["data"]["threshold"]</pre>
+                <p>これはOS標準のパイプを使った方式のため、対応言語を問わずどのランタイムでも同じパターンで受け取れます。</p>
+            </div>
+        </div>
+
+        <div class="faq-item" data-cat="アーキテクチャ">
+            <button class="faq-q">
+                <span>並行実行時のスレッド安全性はどう保証されていますか？</span>
+                <span style="display:flex;align-items:center;gap:0.5rem">
+                    <span class="faq-tag tag-アーキテクチャ">アーキテクチャ</span>
+                    <svg class="faq-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+                </span>
+            </button>
+            <div class="faq-a">
+                <p>xehエンジンは内部で3種類のMutexを使ってRace Conditionを防いでいます：</p>
+                <p>• <code>storeMu (sync.RWMutex)</code>：共有データストアへの読み書きを保護。複数goroutineが同時に読めるが、書き込みは排他的に行われます。</p>
+                <p>• <code>processMu (sync.Mutex)</code>：実行中プロセスのリスト追加/参照を保護します。</p>
+                <p>• <code>serverMu (sync.Mutex)</code>：HTTPサーバーインスタンスのリスト管理を保護します。</p>
+                <p>また、各goroutineのクロージャ変数は引数として明示的にコピーされており、ループ変数キャプチャのバグも防止されています。</p>
+            </div>
+        </div>
+
+        <div class="faq-item" data-cat="アーキテクチャ">
+            <button class="faq-q">
+                <span>子プロセスから親の sharedStore を更新することはできますか？</span>
+                <span style="display:flex;align-items:center;gap:0.5rem">
+                    <span class="faq-tag tag-アーキテクチャ">アーキテクチャ</span>
+                    <svg class="faq-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+                </span>
+            </button>
+            <div class="faq-a">
+                <p>現バージョン（v1.0.0）では、データフローは <strong>親→子の一方向</strong> です。子プロセスからのデータを親の共有ストアに書き戻す仕組みはまだ組み込まれていません。</p>
+                <p>現時点での回避策としては、子プロセスがファイルやローカルソケットに結果を書き出し、次のプロセスや <code>&lt;xeh-logic&gt;</code> でそれを読み込む設計パターンが有効です。双方向通信は将来のロードマップで検討されている機能です。</p>
+            </div>
+        </div>
+
+        <!-- 拡張 -->
+        <div class="faq-item" data-cat="拡張">
+            <button class="faq-q">
+                <span>プラグイン（<code>.xeh</code> ファイルのインポート）はどう使いますか？</span>
+                <span style="display:flex;align-items:center;gap:0.5rem">
+                    <span class="faq-tag tag-拡張">拡張</span>
+                    <svg class="faq-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+                </span>
+            </button>
+            <div class="faq-a">
+                <p>まず <code>set.json</code> の <code>"plugins"</code> セクションに外部xehファイルへのパスを登録します：</p>
+                <pre>{
+  "plugins": {
+    "ai-mod": { "src": "plugins/ai_plugin.xeh" }
+  }
+}</pre>
+                <p>次に <code>app.xeh</code> の <code>&lt;subframework&gt;</code> タグで <code>import</code> 属性を指定します：</p>
+                <pre>&lt;subframework import="ai-mod"&gt;
+  &lt;!-- このsubframeworkのノードが実行される前にai_plugin.xehがロードされます --&gt;
+&lt;/subframework&gt;</pre>
+                <p>インポートされた <code>.xeh</code> ファイルの <code>&lt;root&gt;</code> に定義された変数は、メインの <code>sharedStore</code> にマージされます。同名の変数はインポート側で上書きされます。</p>
+            </div>
+        </div>
+
+        <div class="faq-item" data-cat="拡張">
+            <button class="faq-q">
+                <span><code>&lt;xeh-logic&gt;</code> で使えるタグは <code>&lt;print&gt;</code> だけですか？</span>
+                <span style="display:flex;align-items:center;gap:0.5rem">
+                    <span class="faq-tag tag-拡張">拡張</span>
+                    <svg class="faq-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+                </span>
+            </button>
+            <div class="faq-a">
+                <p>現バージョンではネイティブXMLロジックとして実装されているのは <code>&lt;print&gt;</code> のみです。<code>value</code> 属性または テキストコンテンツに <code>${変数名}</code> を記述すると sharedStore の値が展開されます。</p>
+                <p>ただし <code>&lt;xeh-logic&gt;</code> のノード解析自体は汎用的に設計されており、エンジン本体（<code>main.go</code>）の該当箇所に条件分岐を追加することで <code>&lt;if&gt;</code> <code>&lt;set&gt;</code> などのカスタムタグを比較的容易に実装できます。</p>
+            </div>
+        </div>
+
+        <!-- トラブル -->
+        <div class="faq-item" data-cat="トラブル">
+            <button class="faq-q">
+                <span>子プロセスが起動しない / "runtime not defined" エラーが出る</span>
+                <span style="display:flex;align-items:center;gap:0.5rem">
+                    <span class="faq-tag tag-トラブル">トラブル</span>
+                    <svg class="faq-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+                </span>
+            </button>
+            <div class="faq-a">
+                <p>最も多い原因は <code>set.json</code> の <code>"engines"</code> セクションのタグ名と <code>app.xeh</code> のXMLタグ名の不一致です。以下を確認してください：</p>
+                <p>• <code>set.json</code> の <code>engines</code> キー名と <code>app.xeh</code> のタグ名が完全に一致しているか（大文字小文字・ハイフン含む）</p>
+                <p>• <code>engines[tag].type</code> の値が <code>runtimes</code> に存在するキー名と一致しているか</p>
+                <p>• 指定したランタイムコマンド（例: <code>python3</code>）がシステムのPATHで見つかるか → ターミナルで直接コマンドを実行して確認</p>
+            </div>
+        </div>
+
+        <div class="faq-item" data-cat="トラブル">
+            <button class="faq-q">
+                <span>XMLのコードにコメントや特殊文字（<code>&lt;</code>, <code>&amp;</code>）を書いたらパースエラーになった</span>
+                <span style="display:flex;align-items:center;gap:0.5rem">
+                    <span class="faq-tag tag-トラブル">トラブル</span>
+                    <svg class="faq-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+                </span>
+            </button>
+            <div class="faq-a">
+                <p>これは現バージョンの既知の制約です。<code>app.xeh</code> のタグ内に埋め込むコードはGoの標準 <code>encoding/xml</code> パーサーで処理されるため、XMLの特殊文字をそのまま書けません。</p>
+                <p>回避策として、コードブロックを <code>&lt;![CDATA[...]]&gt;</code> セクションで囲む方法が有効です：</p>
+                <pre>&lt;py-processor&gt;&lt;![CDATA[
+if threshold &lt; 100:
+    print(f"値: {threshold}")
+]]&gt;&lt;/py-processor&gt;</pre>
+                <p>あるいは、コードを外部ファイルに分離して <code>engines[tag].src</code> でそのパスを直接指定する設計も検討してください。</p>
+            </div>
+        </div>
+
+        <div class="faq-item" data-cat="トラブル">
+            <button class="faq-q">
+                <span>Ctrl+C で終了しても子プロセスが残り続けることがある</span>
+                <span style="display:flex;align-items:center;gap:0.5rem">
+                    <span class="faq-tag tag-トラブル">トラブル</span>
+                    <svg class="faq-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+                </span>
+            </button>
+            <div class="faq-a">
+                <p>xehはLinux/macOSでは <code>sh -c</code> 、Windowsでは <code>cmd /C</code> でコマンドを実行します。この場合、シグナルハンドラが <code>Kill()</code> するのはシェルプロセス自体であり、その子（実際のインタプリタ）が残るケースがあります。</p>
+                <p>根本的な解決策としては、<code>exec.Command</code> でシェルを介さず直接コマンドを起動する設計変更、または <code>syscall.SysProcAttr{Setpgid: true}</code> でプロセスグループを設定して <code>syscall.Kill(-pgid, syscall.SIGKILL)</code> でグループごとkillする方法が有効です。</p>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="no-results" id="noResults">
+        該当するQ&amp;Aが見つかりませんでした。
+    </div>
+
+    <!-- AI Q&A セクション -->
+    <div class="ai-section">
+        <div class="ai-header">
+            <span class="ai-spark">✦</span>
+            <h2>xeh について AIに質問する</h2>
+        </div>
+        <div class="ai-body">
+            <p style="margin:0 0 1rem;font-size:0.9rem;color:#555;">上記に載っていない疑問もお気軽にどうぞ。xehのコードベースと仕様をもとに回答します。</p>
+            <div class="ai-input-row">
+                <input
+                    type="text"
+                    class="ai-input"
+                    id="aiQuestion"
+                    placeholder="例：Rustランタイムでのstdin読み込みのベストプラクティスは？"
+                />
+                <button class="ai-submit" id="aiSubmit" onclick="askAI()">質問する ↗</button>
+            </div>
+            <div class="ai-answer" id="aiAnswer">
+                <div class="ai-answer-label">AI の回答</div>
+                <div class="ai-answer-box" id="aiAnswerBox"></div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<footer>
+    <p>xeh プロジェクトは <a href="https://github.com/blob/main/LICENSE" target="_blank">MIT ライセンス</a> のもとで公開されています。</p>
+    <p>&copy; 2026 nori-pixl / xeh プロジェクト開発者一同</p>
+</footer>
+
+<script>
+// ── Accordion ──
+document.querySelectorAll('.faq-q').forEach(btn => {
+    btn.addEventListener('click', () => {
+        const item = btn.closest('.faq-item');
+        const isOpen = item.dataset.open === 'true';
+        item.dataset.open = isOpen ? 'false' : 'true';
+    });
+});
+
+// ── Category filter ──
+document.querySelectorAll('.cat-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+        document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        const cat = btn.dataset.cat;
+        let visible = 0;
+        document.querySelectorAll('.faq-item').forEach(item => {
+            const match = cat === 'all' || item.dataset.cat === cat;
+            item.style.display = match ? '' : 'none';
+            if (match) visible++;
+        });
+        document.getElementById('noResults').style.display = visible === 0 ? 'block' : 'none';
+    });
+});
+
+// ── AI Q&A ──
+const XEH_SYSTEM = `あなたはxehというプログラミング言語エンジンの専門家アシスタントです。
+xehは以下の特徴を持つGoで書かれたXMLベースのマルチランタイムオーケストレーションエンジンです：
+
+- app.xeh（XML）とset.json（設定）の2ファイルで動作
+- 複数言語（Python, Go, Ruby, Rust, Java, C++, PHP, TypeScript, Elixir等）のサブプロセスを並列実行
+- 共有メモリ（sharedStore）をMemoryPacket（JSON）としてstdin経由で子プロセスへ渡す
+- sync.RWMutex / sync.Mutexでスレッド安全を保証
+- <xeh-logic>タグでネイティブXMLロジック（<print>等）を実行
+- <server>タグでGoのnet/httpサーバーを起動可能
+- <subframework import="...">でプラグイン（.xehファイル）をインポート
+- シグナルハンドラでCtrl+C時に子プロセスを全て終了
+- sync.WaitGroupで全goroutine完了を待機
+
+日本語で簡潔かつ具体的に回答してください。コード例が有用な場合は積極的に示してください。`;
+
+async function askAI() {
+    const input = document.getElementById('aiQuestion');
+    const submitBtn = document.getElementById('aiSubmit');
+    const answerDiv = document.getElementById('aiAnswer');
+    const answerBox = document.getElementById('aiAnswerBox');
+    const q = input.value.trim();
+    if (!q) return;
+
+    submitBtn.disabled = true;
+    answerDiv.classList.add('visible');
+    answerBox.innerHTML = '<div class="ai-loading"><div class="dots"><span></span><span></span><span></span></div><span>考え中...</span></div>';
+
+    try {
+        const res = await fetch('https://api.anthropic.com/v1/messages', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                model: 'claude-sonnet-4-6',
+                max_tokens: 1000,
+                system: XEH_SYSTEM,
+                messages: [{ role: 'user', content: q }]
+            })
+        });
+        const data = await res.json();
+        const text = data.content?.map(b => b.text || '').join('') || '回答を取得できませんでした。';
+        answerBox.textContent = text;
+    } catch (e) {
+        answerBox.textContent = 'エラーが発生しました。しばらくしてから再試行してください。';
+    } finally {
+        submitBtn.disabled = false;
+    }
+}
+
+document.getElementById('aiQuestion').addEventListener('keydown', e => {
+    if (e.key === 'Enter') askAI();
+});
+</script>
+</body>
+</html>
