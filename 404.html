@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>xeh - 統合マルチランタイム・オーケストレーション言語</title>
+    <title>ページが存在しません</title>
     <!-- JSZipライブラリの読み込み -->
     <script src="https://cloudflare.com"></script>
     <style>
@@ -262,6 +262,7 @@
     </style>
 </head>
 <body>
+
     <!-- ヘッダーナビゲーション -->
     <header>
         <div class="header-container">
@@ -280,12 +281,17 @@
     <!-- ヒーローセクション -->
     <div class="hero">
         <div class="hero-container">
-            <h1>統合マルチランタイム・オーケストレーション言語 スタートページ</h1>
-            <p>xeh は、XMLベースの構成と柔軟なデータストアを基盤に、複数の異なる言語ランタイムを同一メモリ空間で安全に同時実行・制御するためのメタ言語エンジンです。</p>
+            <h1>error: 404 Not Found</h1>
+            <p>URL : <span id="current-url"></span> <br>ページが存在しません</p>
             <!-- JSZip発火用ボタン -->
-            <a href="xeh-project-main (2).zip" id="xeh-project-main.zip" class="btn-primary">xeh download</a>
+            
         </div>
+    		
     </div>
+		<div class="container">
+				<h3>なぜ表示されましたか？<br><br>URLに不明なhtmlのファイル、不明な文章が含んでいる可能性があります。</h3>
+				<a href="index.html">ホームページに戻る</a>
+		</div>
 
     <!-- フッター -->
     <footer>
@@ -294,6 +300,9 @@
     </footer>
 
     <!-- 🚀 動的にZIPを生成してダウンロードさせるスクリプト -->
-    
+    <script>
+        // 今アクセスされているURLを自動で取得して表示する
+        document.getElementById('current-url').textContent = window.location.href;
+    </script>
 </body>
-  </html>
+    </html>
