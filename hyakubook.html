@@ -3,10 +3,309 @@
 <head>
 <meta charset="utf-8">
 <title>xeh - コード百科事典</title>
+<style>
+/* ←ここは元のCSSそのまま */
+...
+.os-tab h3 {
+    margin-top: 0;
+    font-size: 1.1rem;
+    border-bottom: 2px solid var(--go-border);
+    padding-bottom: 0.3rem;
+}
+
+/* ==========================================================
+   ここから追加（Cookbook拡張）
+   ========================================================== */
+
+/* Cookbook全体 */
+.cookbook-wrapper{
+    margin-top:2rem;
+}
+
+/* 5ch板一覧風ナビ */
+.cookbook-nav{
+    position:sticky;
+    top:80px;
+    z-index:50;
+    background:#fff;
+    border:1px solid var(--go-border);
+    border-radius:6px;
+    padding:1rem;
+    margin-bottom:2rem;
+    box-shadow:0 2px 8px rgba(0,0,0,.06);
+}
+
+.cookbook-nav-title{
+    font-weight:700;
+    color:var(--xeh-purple);
+    margin-bottom:.8rem;
+}
+
+.cookbook-nav-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
+    gap:.5rem;
+}
+
+.cookbook-nav a{
+    display:block;
+    padding:.55rem .8rem;
+    border-radius:4px;
+    text-decoration:none;
+    color:var(--text-color);
+    background:var(--go-gray);
+    transition:.15s;
+    font-size:.92rem;
+}
+
+.cookbook-nav a:hover{
+    background:var(--xeh-purple);
+    color:#fff;
+    transform:translateX(4px);
+}
+
+/* カテゴリ */
+.cookbook-category{
+    margin-top:4rem;
+}
+
+.cookbook-category h2{
+    margin-bottom:1rem;
+}
+
+/* 使用例カード */
+.example-card{
+    background:#fff;
+    border:1px solid var(--go-border);
+    border-radius:8px;
+    margin:1.5rem 0;
+    overflow:hidden;
+    box-shadow:0 2px 10px rgba(0,0,0,.05);
+}
+
+.example-header{
+    padding:1rem 1.25rem;
+    border-left:6px solid var(--xeh-purple);
+    background:linear-gradient(
+        90deg,
+        rgba(117,20,211,.08),
+        rgba(242,90,162,.04)
+    );
+}
+
+.example-header h3{
+    margin:0;
+    color:var(--xeh-purple);
+}
+
+.example-number{
+    display:inline-block;
+    background:var(--xeh-purple);
+    color:#fff;
+    border-radius:999px;
+    padding:.2rem .7rem;
+    font-size:.8rem;
+    margin-right:.5rem;
+}
+
+.example-desc{
+    color:#666;
+    margin-top:.5rem;
+    font-size:.95rem;
+}
+
+.example-body{
+    padding:1.25rem;
+}
+
+/* バッジ */
+.example-meta{
+    display:flex;
+    flex-wrap:wrap;
+    gap:.5rem;
+    margin-bottom:1rem;
+}
+
+.meta-badge{
+    background:var(--go-gray);
+    border:1px solid var(--go-border);
+    border-radius:999px;
+    padding:.25rem .7rem;
+    font-size:.82rem;
+}
+
+.meta-runtime{
+    color:var(--xeh-purple);
+    font-weight:600;
+}
+
+.meta-level{
+    color:var(--xeh-orange);
+    font-weight:600;
+}
+
+/* コードタブ */
+.code-tabs{
+    display:flex;
+    gap:.5rem;
+    flex-wrap:wrap;
+    margin-bottom:.5rem;
+}
+
+.code-tab{
+    padding:.35rem .8rem;
+    background:var(--go-gray);
+    border-radius:4px;
+    font-size:.82rem;
+    border:1px solid var(--go-border);
+}
+
+.code-tab.active{
+    background:var(--xeh-purple);
+    color:#fff;
+}
+
+/* ミニカード */
+.example-list{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
+    gap:1rem;
+}
+
+.example-mini{
+    background:var(--go-gray);
+    border:1px solid var(--go-border);
+    border-radius:6px;
+    padding:1rem;
+    transition:.15s;
+}
+
+.example-mini:hover{
+    transform:translateY(-2px);
+    box-shadow:0 4px 12px rgba(0,0,0,.08);
+}
+
+.example-mini strong{
+    display:block;
+    color:var(--xeh-purple);
+    margin-bottom:.4rem;
+}
+
+/* Tips */
+.tip-box{
+    margin:1rem 0;
+    padding:1rem;
+    border-left:4px solid var(--xeh-orange);
+    background:#fff9f2;
+    border-radius:4px;
+}
+
+.tip-box strong{
+    color:var(--xeh-orange);
+}
+
+/* Warning */
+.warning-box{
+    margin:1rem 0;
+    padding:1rem;
+    border-left:4px solid #e74c3c;
+    background:#fff5f5;
+    border-radius:4px;
+}
+
+.warning-box strong{
+    color:#e74c3c;
+}
+
+/* 応用例 */
+.application-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(240px,1fr));
+    gap:1rem;
+    margin-top:1rem;
+}
+
+.application-card{
+    border:1px solid var(--go-border);
+    border-radius:6px;
+    padding:1rem;
+    background:#fff;
+}
+
+.application-card h4{
+    margin-top:0;
+    color:var(--xeh-purple);
+}
+
+/* スクロール補正 */
+section[id]{
+    scroll-margin-top:120px;
+}
+
+html{
+    scroll-behavior:smooth;
+}
+
+/* モバイル */
+@media(max-width:768px){
+
+    .cookbook-nav{
+        top:70px;
+    }
+
+    .cookbook-nav-grid{
+        grid-template-columns:1fr;
+    }
+
+    .example-meta{
+        flex-direction:column;
+    }
+
+    .code-tabs{
+        flex-direction:column;
+    }
+
+    .application-grid{
+        grid-template-columns:1fr;
+    }
+
+    .example-list{
+        grid-template-columns:1fr;
+    }
+}
+
+</style>
 </head>
 <body>
+    <header>
+        <div class="header-container">
+            <img src="costume1-_2_.png" width="90">
+            <nav class="nav-links">
+                <a href="#download">ダウンロード</a>
+                <a href="#quickstart">クイックスタート</a>
+                <a href="#features">機能・特徴</a>
+                <a href="#docs">ドキュメント</a>
+                <a href="houkoku.html">報告</a>
+                <a href="ripo.html">リポジトリ</a>
+                <a href="https://github.com/nori-pixl/xeh-project" target="_blank">GitHub</a>
+                <a href="xeh-qa.html">Q&A</a>
+            </nav>
+        </div>
+    </header>
+
+    <!-- ヒーローセクション -->
+    <div class="hero">
+        <div class="hero-container">
+            <h1>百科事典</h1>
+            <p>100個の応用できるコードを集めました。</p>
+            <!-- JSZip発火用ボタン -->
+            <a href="xeh-project-main (2).zip" id="xeh-project-main.zip" class="btn-primary">xeh download</a>
+        </div>
+    </div>
+
+    <div class="container">
 <section id="cookbook">
-    <h2>xeh コード百科事典（使用例 1〜100）</h2>
+    
 
     <div class="features-grid">
         <div class="feature-card">
@@ -513,7 +812,7 @@ print("Bot:",msg)</code></pre>
 <pre><span class="code-lang">python</span><code>for line in logs:</code></pre>
     </section>
 
-    <section id="ex46">
+    <section id="e46">
         <h3>使用例46: ダッシュボード</h3>
 <pre><span class="code-lang">html</span><code>&lt;canvas&gt;&lt;/canvas&gt;</code></pre>
     </section>
@@ -823,5 +1122,12 @@ conn=sqlite3.connect("app.db")</code></pre>
     </section>
 
 </section>
+</div>
+
+    <!-- フッター -->
+    <footer>
+        <p>xeh プロジェクトは、<a href="https://github.com/blob/main/LICENSE" target="_blank">MIT ライセンス</a>のもとで公開されているオープンソースソフトウェアです。</p>
+        <p>&copy; 2026 nori-pixl / xeh プロジェクト開発者一同</p>
+    </footer>
 </body>
 </html>
