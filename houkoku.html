@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>xeh - ページが存在しません</title>
+	<link rel="icon" type="image/png" href="costume4-_1_.png">
+    <!-- JSZipライブラリの読み込み -->
+    <script src="https://cloudflare.com"></script>
+    <style>
+		/* テーブル */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 1.5rem 0;
+    background: #ffffff;
+    border: 1px solid var(--go-border);
+    border-top: 3px solid var(--xeh-purple);
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+th, td {
+    padding: 0.75rem 1rem;
+    text-align: left;
+    border-bottom: 1px solid var(--go-border);
+}
+
+th {
+    background-color: var(--go-gray);
+    color: var(--go-dark);
+    font-weight: 600;
+    font-size: 0.95rem;
+}
+
+td {
+    font-size: 0.9rem;
+    color: var(--text-color);
+}
+
+tr:last-child td {
+    border-bottom: none;
+}
+
+tr:hover td {
+    background-color: var(--go-gray);
+}
+        /* ロゴ画像に合わせたサイバー・テックパレット */
+        :root {
+            --xeh-purple: #7514d3;  /* ロゴの「X」の紫 */
+            --xeh-pink: #f25aa2;    /* ロゴの「E」のピンク */
+            --xeh-orange: #f98616;  /* ロゴの「H」のオレンジ */
+            --go-dark: #1a1a1a;
+            --go-gray: #f8f9fa;
+            --go-border: #e0e0e0;
+            --text-color: #333333;
+            --code-bg: #1e1e1e;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji";
+            line-height: 1.6;
+            color: var(--text-color);
+            margin: 0;
+            padding: 0;
+            background-color: #ffffff;
+        }
+
+        /* ヘッダー */
+        header {
+            background-color: #ffffff;
+            border-bottom: 1px solid var(--go-border);
+            padding: 1rem 2rem;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-container {
+            max-width: 1100px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.6rem;
+            font-weight: 800;
+            /* ロゴのパープル・ピンク・オレンジのグラデーション文字を再現 */
+            background: linear-gradient(90deg, var(--xeh-purple), var(--xeh-pink), var(--xeh-orange));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-decoration: none;
+            letter-spacing: 0.5px;
+        }
+
+        .nav-links a {
+            color: var(--text-color);
+            text-decoration: none;
+            margin-left: 1.5rem;
+            font-size: 0.95rem;
+            font-weight: 500;
+        }
+
+        .nav-links a:hover {
+            color: var(--xeh-purple);
+        }
+
+        /* ヒーローセクション（ロゴの色合いをベースにした美麗な斜めグラデーション） */
+        .hero {
+            background: linear-gradient(135deg, var(--xeh-purple) 0%, #ad29aa 50%, var(--xeh-orange) 100%);
+            color: white;
+            padding: 4.5rem 2rem;
+            text-align: center;
+        }
+
+        .hero-container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .hero h1 {
+            font-size: 2.8rem;
+            margin: 0 0 1rem 0;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+        }
+
+        .hero p {
+            font-size: 1.25rem;
+            margin: 0 0 2rem 0;
+            opacity: 0.95;
+            font-weight: 300;
+        }
+
+        .btn-primary {
+            background-color: #ffffff;
+            color: var(--xeh-purple);
+            padding: 0.8rem 1.8rem;
+            border-radius: 4px;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 1rem;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            transition: all 0.2s ease;
+        }
+
+        .btn-primary:hover {
+            background-color: var(--go-gray);
+            transform: translateY(-1px);
+            box-shadow: 0 6px 16px rgba(0,0,0,0.2);
+        }
+
+        /* メインコンテンツ */
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 3rem 2rem;
+        }
+
+        section {
+            margin-bottom: 4rem;
+        }
+
+        h2 {
+            font-size: 1.8rem;
+            color: var(--go-dark);
+            /* 見出しの下線をロゴ中央の鮮やかなピンクに変更 */
+            border-bottom: 3px solid var(--xeh-pink);
+            padding-bottom: 0.5rem;
+            margin-top: 0;
+        }
+
+        h3 {
+            color: var(--xeh-purple);
+            margin-top: 1.5rem;
+        }
+
+        /* 特徴（グリッド表示） */
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        .feature-card {
+            background: var(--go-gray);
+            border: 1px solid var(--go-border);
+            border-radius: 4px;
+            padding: 1.5rem;
+            /* 各カードの上部にアクセントとしてパープルの線を配置 */
+            border-top: 3px solid var(--xeh-purple);
+        }
+
+        .feature-card h3 {
+            margin-top: 0;
+            color: var(--xeh-purple);
+        }
+
+        /* コードブロック */
+        pre {
+            background-color: var(--code-bg);
+            color: #f8f8f2;
+            padding: 1.25rem;
+            border-radius: 4px;
+            overflow-x: auto;
+            font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, Courier, monospace;
+            font-size: 0.9rem;
+            margin: 1rem 0;
+            position: relative;
+            /* コードブロックの左端にアクセントとしてオレンジの太線を配置 */
+            border-left: 4px solid var(--xeh-orange);
+        }
+
+        .code-lang {
+            position: absolute;
+            top: 5px;
+            right: 10px;
+            color: #777;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+        }
+
+        code {
+            font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, Courier, monospace;
+            background-color: var(--go-gray);
+            padding: 0.2rem 0.4rem;
+            border-radius: 3px;
+            font-size: 0.9rem;
+        }
+
+        pre code {
+            background-color: transparent;
+            padding: 0;
+            border-radius: 0;
+        }
+
+        /* リストとリンク */
+        .doc-links {
+            list-style: none;
+            padding: 0;
+        }
+
+        .doc-links li {
+            margin-bottom: 0.75rem;
+        }
+
+        .doc-links a {
+            color: var(--xeh-purple);
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .doc-links a:hover {
+            color: var(--xeh-pink);
+            text-decoration: underline;
+        }
+
+        /* フッター */
+        footer {
+            background-color: var(--go-dark);
+            color: #ffffff;
+            padding: 2.5rem 2rem;
+            text-align: center;
+            font-size: 0.9rem;
+            border-top: 1px solid #333;
+        }
+
+        footer a {
+            color: var(--xeh-pink);
+            text-decoration: none;
+        }
+
+        footer a:hover {
+            text-decoration: underline;
+        }
+    /* OSごとのダウンロードタブ/カード用スタイル */
+.os-tabs {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1.5rem;
+    margin-top: 1.5rem;
+    margin-bottom: 1.5rem;
+}
+.os-tab {
+    background: var(--go-gray);
+    border: 1px solid var(--go-border);
+    border-radius: 6px;
+    padding: 1rem;
+}
+.os-tab h3 {
+    margin-top: 0;
+    font-size: 1.1rem;
+    border-bottom: 2px solid var(--go-border);
+    padding-bottom: 0.3rem;
+}
+
+    </style>
+</head>
+<body>
+
+    <!-- ヘッダーナビゲーション -->
+    <header>
+        <div class="header-container">
+            <img src="costume1-_2_.png" width="90">
+            <nav class="nav-links">
+                <a href="#download">ダウンロード</a>
+                <a href="#quickstart">クイックスタート</a>
+                <a href="#features">機能・特徴</a>
+                <a href="#docs">ドキュメント</a>
+            		<a href="houkoku.html">報告</a>
+			        	<a href="ripo.html">リポジトリ</a>
+                <a href="https://github.com/nori-pixl/xeh-project" target="_blank">GitHub</a>
+                <a href="xeh-qa.html">Q&A</a>
+            </nav>
+        </div>
+    </header>
+
+    <!-- ヒーローセクション -->
+    <div class="hero">
+        <div class="hero-container">
+            <h1>報告</h1>
+            <p>バグ、ご要件がありましたら、こちらにご連絡ください。</p>
+            <!-- JSZip発火用ボタン -->
+            
+        </div>
+    		
+    </div>
+		<div class="container">
+				<h4>警告</h4>
+				<p>スパムや、迷惑メールなどは、直ちに法的措置を下します。</p>
+				<table>
+    <thead>
+        <tr>
+            <th>gmailメールアドレス</th>
+            <th>sato.shigure4@gmail.com</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            
+            
+        </tr>
+        
+    </tbody>
+</table>
+		</div>
+
+    <!-- フッター -->
+    <footer>
+        <p>xeh プロジェクトは、<a href="https://github.com/blob/main/LICENSE" target="_blank">MIT ライセンス</a>のもとで公開されているオープンソースソフトウェアです。</p>
+        <p>&copy; 2026 nori-pixl / xeh プロジェクト開発者一同</p>
+    </footer>
+
+    <!-- 🚀 動的にZIPを生成してダウンロードさせるスクリプト -->
+    <script>
+        // 今アクセスされているURLを自動で取得して表示する
+        document.getElementById('current-url').textContent = window.location.href;
+    </script>
+</body>
+  </html>
