@@ -594,7 +594,7 @@ threshold = packet["data"]["threshold"]</pre>
             </button>
             <div class="faq-a">
                 <p>現バージョンではネイティブXMLロジックとして実装されているのは <code>&lt;print&gt;</code> のみです。<code>value</code> 属性または テキストコンテンツに <code>${変数名}</code> を記述すると sharedStore の値が展開されます。</p>
-                <p>ただし <code>&lt;xeh-logic&gt;</code> のノード解析自体は汎用的に設計されており、エンジン本体（<code>main.go</code>）の該当箇所に条件分岐を追加することで <code>&lt;if&gt;</code> <code>&lt;set&gt;</code> などのカスタムタグを比較的容易に実装できます。</p>
+                <p>ただし <code>&lt;xeh-logic&gt;</code> のノード解析自体は汎用的に設計されており、エンジン本体（internal）フォルダ内の該当箇所に条件分岐を追加することで <code>&lt;if&gt;</code> <code>&lt;set&gt;</code> などのカスタムタグを比較的容易に実装できます。</p>
             </div>
         </div>
 
